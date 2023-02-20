@@ -7,7 +7,6 @@ module Database.ClickHouseDriver.HTTP (
 import Database.ClickHouseDriver.HTTP.Types
     ( Cmd,
       Format(..),
-      Haxl,
       HttpConnection(..),
       HttpParams(..),
       JSONResult )
@@ -15,18 +14,10 @@ import Database.ClickHouseDriver.HTTP.Client
     ( defaultHttpClient,
       defaultHttpPool,
       exec,
-      getByteString,
       getJSON,
-      getJsonM,
-      getText,
-      getTextM,
       httpClient,
-      insertFromFile,
-      insertMany,
-      insertOneRow,
       ping,
-      runQuery,
-      setupEnv )
+      runQuery )
 import Database.ClickHouseDriver.HTTP.Connection
     ( HttpConnection(..),
       createHttpPool,

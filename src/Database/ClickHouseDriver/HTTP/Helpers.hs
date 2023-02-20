@@ -9,11 +9,10 @@
 module Database.ClickHouseDriver.HTTP.Helpers
   ( extract,
     genURL,
-    toString,
   )
 where
 
-import Control.Monad.Writer (WriterT (runWriterT))
+import Control.Monad.Writer (WriterT (runWriterT), tell)
 import qualified Data.Aeson as JP
 import Data.Attoparsec.ByteString (IResult (Done, Fail), parse)
 import qualified Data.ByteString.Char8 as C8
@@ -27,10 +26,6 @@ import Database.ClickHouseDriver.HTTP.Connection
   )
 import Database.ClickHouseDriver.HTTP.Types (Cmd, HttpParams (..), JSONResult)
 import Data.Bool (bool)
-import Database.ClickHouseDriver.IO.BufferedWriter (writeIn)
-import Database.ClickHouseDriver.Types
-  ( ClickhouseType (CKArray, CKInt32, CKNull, CKString, CKTuple),
-  )
 import qualified Network.URI.Encode as NE
 
 -- | Trim JSON data
@@ -77,22 +72,7 @@ genURL
     let res = DB.traceShowId $ basicUrl ++ NE.encode cmd ++ dbUrl db
     return res
 
--- | serialize column type into sql string
-toString :: [ClickhouseType] -> String
-toString ck = "(" ++ toStr ck ++ ")"
-
-toStr :: [ClickhouseType] -> String
-toStr [] = ""
-toStr (x : []) = toStr' x
-toStr (x : xs) = toStr' x ++ "," ++ toStr xs
-
-toStr' :: ClickhouseType -> String
-toStr' (CKInt32 n) = show n
-toStr' (CKString str) = "'" ++ C8.unpack str ++ "'"
-toStr' (CKArray arr) = "[" ++ (toStr $ toList arr) ++ "]"
-toStr' (CKTuple arr) = "(" ++ (toStr $ toList arr) ++ ")"
-toStr' CKNull = "null"
-toStr' _ = error "unsupported writing type"
-
 dbUrl :: (Maybe String) -> String
 dbUrl = fromMaybe "" . fmap ("&database=" ++)
+
+writeIn = tell
