@@ -14,6 +14,8 @@ where
 
 import Control.Monad.Writer (WriterT (runWriterT), tell)
 import qualified Data.Aeson as JP
+import qualified Data.Aeson.Key as AesonKey
+import qualified Data.Aeson.KeyMap as AKM
 import Data.Attoparsec.ByteString (IResult (Done, Fail), parse)
 import Data.Bool (bool)
 import qualified Data.ByteString.Char8 as C8
@@ -36,7 +38,7 @@ extract val = do
     getData (Done _ (JP.Object x)) = Right $ getData' x
     getData _ = Right []
 
-    getData' = map getObject . maybeArrToList . HM.lookup (pack "data")
+    getData' = map getObject . maybeArrToList . AKM.lookup (AesonKey.fromText $ pack "data")
 
     maybeArrToList Nothing = []
     maybeArrToList (Just x) = toList . getArray $ x
