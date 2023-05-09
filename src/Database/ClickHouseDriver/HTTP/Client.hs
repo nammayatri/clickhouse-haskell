@@ -37,7 +37,7 @@ import Control.Monad.State.Lazy (MonadIO (..))
 import Data.Aeson (FromJSON)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
-import Data.ByteString.Lazy.Builder
+import Data.ByteString.Builder
   ( char8,
     lazyByteString,
     toLazyByteString,
