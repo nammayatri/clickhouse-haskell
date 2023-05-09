@@ -1,0 +1,6 @@
+resolver: lts-20.18
+allow-newer: true
+system-ghc: true
+
+packages:
+  - .
