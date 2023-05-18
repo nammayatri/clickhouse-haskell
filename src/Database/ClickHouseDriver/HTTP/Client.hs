@@ -49,6 +49,7 @@ import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8)
 import Data.Time.Clock (NominalDiffTime)
 import Data.Typeable (Typeable)
+import Data.Aeson (FromJSON)
 import Database.ClickHouseDriver.Defines as Defines
   ( _DEFAULT_HOST,
     _DEFAULT_HTTP_PORT,
@@ -59,8 +60,8 @@ import Database.ClickHouseDriver.HTTP.Connection
     httpConnect,
   )
 import Database.ClickHouseDriver.HTTP.Helpers
-  ( extract,
-    genURL,
+  ( genURL,
+    extract,
   )
 import Data.ByteString.UTF8 as BSU 
 import Database.ClickHouseDriver.HTTP.Types (Format (..), HttpConnection (..), JSONResult)
@@ -112,7 +113,7 @@ fetchData query http@HttpConnection {httpManager = mng} = do
  
 
 -- | Fetch data from ClickHouse client in the JSON format.
-getJSON :: String -> HttpConnection -> IO JSONResult
+getJSON :: FromJSON a => String -> HttpConnection -> IO (Either String a)
 getJSON query = \conn -> extract <$> getData (FetchJSON query) conn
 
 -- | actual function used by user to perform fetching command

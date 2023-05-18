@@ -20,7 +20,6 @@ import qualified Data.HashMap.Strict as HM
 import Data.Maybe (fromMaybe)
 import Data.Text (pack)
 import Data.Vector (toList)
-import Debug.Trace as DB
 import Database.ClickHouseDriver.HTTP.Connection
   ( HttpConnection (HttpConnection, httpParams, httpTls),
   )
@@ -29,8 +28,9 @@ import Data.Bool (bool)
 import qualified Network.URI.Encode as NE
 
 -- | Trim JSON data
-extract :: C8.ByteString -> JSONResult
-extract val = getData $ parse JP.json val
+extract :: (JP.FromJSON a) => C8.ByteString -> Either String a 
+extract val = do
+  either (Left . C8.unpack) eitherFromJSON $ getData (parse JP.json val)
   where
     getData (Fail e _ _) = Left e
     getData (Done _ (JP.Object x)) = Right $ getData' x
@@ -43,6 +43,12 @@ extract val = getData $ parse JP.json val
 
     getArray (JP.Array arr) = arr
     getObject (JP.Object x) = x
+
+    eitherFromJSON val = 
+      case JP.fromJSON $ JP.toJSON val of 
+        JP.Success a -> Right a
+        JP.Error err -> Left err
+
 
 genURL :: HttpConnection -> Cmd -> IO String
 genURL
@@ -69,7 +75,7 @@ genURL
       writeIn $ show port
       writeIn "/"
       if cmd == "ping" then return () else writeIn "?query=" 
-    let res = DB.traceShowId $ basicUrl ++ NE.encode cmd ++ dbUrl db
+    let res = basicUrl ++ NE.encode cmd ++ dbUrl db
     return res
 
 dbUrl :: (Maybe String) -> String
