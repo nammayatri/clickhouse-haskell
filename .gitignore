@@ -1,4 +1,3 @@
-.stack-work/
 *~
 dist
 dist-*
@@ -10,3 +9,5 @@ dist-*
 *.dyn_o
 *.dyn_hi
 *.prof
+
+result/
