@@ -1,11 +1,10 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE OverloadedStrings #-}
 
--- | This module defines constants for internal use. 
-
+-- | This module defines constants for internal use.
 module Database.ClickHouseDriver.Defines where
 
-import           Data.ByteString.Internal
+import Data.ByteString.Internal
 
 {-# INLINE _DEFAULT_PORT #-}
 _DEFAULT_PORT = "9000"
@@ -30,7 +29,7 @@ _DBMS_MIN_REVISION_WITH_CLIENT_INFO = 54032 :: Word
 {-# INLINE _DBMS_MIN_REVISION_WITH_SERVER_TIMEZONE #-}
 _DBMS_MIN_REVISION_WITH_SERVER_TIMEZONE = 54058 :: Word
 
-{-# INLINE _DBMS_MIN_REVISION_WITH_QUOTA_KEY_IN_CLIENT_INFO  #-}
+{-# INLINE _DBMS_MIN_REVISION_WITH_QUOTA_KEY_IN_CLIENT_INFO #-}
 _DBMS_MIN_REVISION_WITH_QUOTA_KEY_IN_CLIENT_INFO = 54060 :: Word
 
 _DBMS_MIN_REVISION_WITH_SERVER_DISPLAY_NAME = 54372 :: Word
@@ -115,16 +114,16 @@ _DEFAULT_HOST_NAME = "localhost" :: ByteString
 
 {-# INLINE _DEFAULT_PASSWORD #-}
 _DEFAULT_PASSWORD :: ByteString
-_DEFAULT_PASSWORD =  "" :: ByteString
+_DEFAULT_PASSWORD = "" :: ByteString
 
 {-# INLINE _DEFAULT_PORT_NAME #-}
 _DEFAULT_PORT_NAME :: ByteString
-_DEFAULT_PORT_NAME =  "9000" :: ByteString
+_DEFAULT_PORT_NAME = "9000" :: ByteString
 
-{-# INLINE _DEFAULT_DATABASE#-}
+{-# INLINE _DEFAULT_DATABASE #-}
 _DEFAULT_DATABASE :: ByteString
-_DEFAULT_DATABASE =  "default" :: ByteString
+_DEFAULT_DATABASE = "default" :: ByteString
 
 {-# INLINE _DEFAULT_COMPRESSION_SETTING #-}
 _DEFAULT_COMPRESSION_SETTING :: Bool
-_DEFAULT_COMPRESSION_SETTING =  False
+_DEFAULT_COMPRESSION_SETTING = False

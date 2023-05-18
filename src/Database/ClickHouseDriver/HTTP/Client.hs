@@ -34,6 +34,7 @@ where
 import Control.Concurrent.Async (mapConcurrently)
 import Control.Exception (SomeException, try)
 import Control.Monad.State.Lazy (MonadIO (..))
+import Data.Aeson (FromJSON)
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LBS
 import Data.ByteString.Lazy.Builder
@@ -42,6 +43,7 @@ import Data.ByteString.Lazy.Builder
     toLazyByteString,
   )
 import qualified Data.ByteString.Lazy.Char8 as C8
+import Data.ByteString.UTF8 as BSU
 import Data.Default.Class (def)
 import Data.Hashable (Hashable (hashWithSalt))
 import Data.Pool (Pool, withResource)
@@ -49,7 +51,6 @@ import qualified Data.Text as T
 import Data.Text.Encoding (decodeUtf8)
 import Data.Time.Clock (NominalDiffTime)
 import Data.Typeable (Typeable)
-import Data.Aeson (FromJSON)
 import Database.ClickHouseDriver.Defines as Defines
   ( _DEFAULT_HOST,
     _DEFAULT_HTTP_PORT,
@@ -60,14 +61,13 @@ import Database.ClickHouseDriver.HTTP.Connection
     httpConnect,
   )
 import Database.ClickHouseDriver.HTTP.Helpers
-  ( genURL,
-    extract,
+  ( extract,
+    genURL,
   )
-import Data.ByteString.UTF8 as BSU 
 import Database.ClickHouseDriver.HTTP.Types (Format (..), HttpConnection (..), JSONResult)
 import Network.HTTP.Client
-  ( RequestBody (..),
-    Manager,
+  ( Manager,
+    RequestBody (..),
     httpLbs,
     method,
     parseRequest,
@@ -76,7 +76,7 @@ import Network.HTTP.Client
     streamFile,
   )
 
-data HttpClient = FetchJSON String | Ping 
+data HttpClient = FetchJSON String | Ping
 
 deriving instance Show HttpClient
 
@@ -84,13 +84,12 @@ deriving instance Typeable HttpClient
 
 deriving instance Eq HttpClient
 
-class FetchData a where 
+class FetchData a where
   getData :: a -> HttpConnection -> IO BS.ByteString
 
-  
 instance FetchData HttpClient where
-  getData client http = do 
-    case client of 
+  getData client http = do
+    case client of
       FetchJSON query -> fetchData (query ++ " FORMAT JSON") http
       Ping -> fetchData "Ping" http
 
@@ -101,16 +100,14 @@ fetchData ::
   IO BS.ByteString
 fetchData query http@HttpConnection {httpManager = mng} = do
   e <- Control.Exception.try $ do
-        url <- genURL http query
-        req <- parseRequest url
-        ans <- responseBody <$> httpLbs req mng
-        return $ LBS.toStrict ans
+    url <- genURL http query
+    req <- parseRequest url
+    ans <- responseBody <$> httpLbs req mng
+    return $ LBS.toStrict ans
   either
     (pure . BSU.fromString . show)
     (pure)
     (e :: Either SomeException (BS.ByteString))
-
- 
 
 -- | Fetch data from ClickHouse client in the JSON format.
 getJSON :: FromJSON a => String -> HttpConnection -> IO (Either String a)
@@ -125,10 +122,9 @@ exec cmd' conn@HttpConnection {httpManager = mng} = do
   ans <-
     responseBody
       <$> httpLbs
-        req
-          { method = "POST",
+        req{method = "POST",
             requestBody = RequestBodyLBS cmd
-          }
+           }
         mng
   if ans /= ""
     then return $ Left ans -- error message

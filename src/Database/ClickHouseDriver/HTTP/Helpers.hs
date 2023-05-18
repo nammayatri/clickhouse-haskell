@@ -15,6 +15,7 @@ where
 import Control.Monad.Writer (WriterT (runWriterT), tell)
 import qualified Data.Aeson as JP
 import Data.Attoparsec.ByteString (IResult (Done, Fail), parse)
+import Data.Bool (bool)
 import qualified Data.ByteString.Char8 as C8
 import qualified Data.HashMap.Strict as HM
 import Data.Maybe (fromMaybe)
@@ -24,11 +25,10 @@ import Database.ClickHouseDriver.HTTP.Connection
   ( HttpConnection (HttpConnection, httpParams, httpTls),
   )
 import Database.ClickHouseDriver.HTTP.Types (Cmd, HttpParams (..), JSONResult)
-import Data.Bool (bool)
 import qualified Network.URI.Encode as NE
 
 -- | Trim JSON data
-extract :: (JP.FromJSON a) => C8.ByteString -> Either String a 
+extract :: (JP.FromJSON a) => C8.ByteString -> Either String a
 extract val = do
   either (Left . C8.unpack) eitherFromJSON $ getData (parse JP.json val)
   where
@@ -44,11 +44,10 @@ extract val = do
     getArray (JP.Array arr) = arr
     getObject (JP.Object x) = x
 
-    eitherFromJSON val = 
-      case JP.fromJSON $ JP.toJSON val of 
+    eitherFromJSON val =
+      case JP.fromJSON $ JP.toJSON val of
         JP.Success a -> Right a
         JP.Error err -> Left err
-
 
 genURL :: HttpConnection -> Cmd -> IO String
 genURL
@@ -74,7 +73,7 @@ genURL
       writeIn ":"
       writeIn $ show port
       writeIn "/"
-      if cmd == "ping" then return () else writeIn "?query=" 
+      if cmd == "ping" then return () else writeIn "?query="
     let res = basicUrl ++ NE.encode cmd ++ dbUrl db
     return res
 

@@ -16,8 +16,8 @@ module Database.ClickHouseDriver.HTTP.Connection
   )
 where
 
-import Data.Default.Class (Default (..))
 import Data.Bool (bool)
+import Data.Default.Class (Default (..))
 import Data.Pool (Pool, createPool)
 import Data.Time.Clock (NominalDiffTime)
 import Database.ClickHouseDriver.HTTP.Types
@@ -31,12 +31,12 @@ import Database.ClickHouseDriver.HTTP.Types
         httpUsername
       ),
   )
-import qualified Network.HTTP.Client.TLS as TLS
 import Network.HTTP.Client
-  ( defaultManagerSettings,
+  ( Manager,
+    defaultManagerSettings,
     newManager,
-    Manager
   )
+import qualified Network.HTTP.Client.TLS as TLS
 
 #define DEFAULT_USERNAME  "default"
 #define DEFAULT_HOST_NAME "localhost"
@@ -58,7 +58,7 @@ instance Default HttpParams where
 
 createHttpPool ::
   HttpParams ->
-  Bool -> 
+  Bool ->
   Int ->
   NominalDiffTime ->
   Int ->
@@ -71,7 +71,7 @@ createHttpPool
       httpUsername = user,
       httpDatabase = db
     }
-    needTls =
+  needTls =
     createPool
       ( do
           httpConnectDb db user password port host needTls
@@ -79,7 +79,7 @@ createHttpPool
       (\_ -> return ())
 
 httpConnect :: String -> String -> Int -> String -> Bool -> IO (HttpConnection)
-httpConnect = httpConnectDb Nothing 
+httpConnect = httpConnectDb Nothing
 
 httpConnectDb :: Maybe String -> String -> String -> Int -> String -> Bool -> IO (HttpConnection)
 httpConnectDb database user password port host needTls = do
