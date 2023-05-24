@@ -1,17 +1,9 @@
 {
   inputs = {
     common.url = "github:nammayatri/common";
-    nixpkgs.follows = "common/nixpkgs";
-    flake-parts.follows = "common/flake-parts";
-    systems.url = "github:nix-systems/default";
   };
-  outputs = inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = import inputs.systems;
-      imports = [
-        inputs.common.flakeModules.default
-      ];
-
+  outputs = inputs:
+    inputs.common.lib.mkFlake { inherit inputs; } {
       perSystem = { self', pkgs, lib, config, ... }: {
         haskellProjects.default = {
           autoWire = [ "packages" "checks" ];
