@@ -6,6 +6,7 @@
     inputs.common.lib.mkFlake { inherit inputs; } {
       perSystem = { self', pkgs, lib, config, ... }: {
         haskellProjects.default = {
+          projectFlakeName = "clickhouse-haskell";
           autoWire = [ "packages" "checks" ];
         };
         packages.default = self'.packages.clickhouse-haskell;
