@@ -1,6 +1,6 @@
 {
   inputs = {
-    common.url = "github:nammayatri/common";
+    common.url = "github:arjunkathuria/common/Mobility-GHC927-Rebased";
   };
   outputs = inputs:
     inputs.common.lib.mkFlake { inherit inputs; } {

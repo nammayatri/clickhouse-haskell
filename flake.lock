@@ -57,15 +57,16 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1685470074,
-        "narHash": "sha256-0vdewKY4Vmx476Qg5qd2voyuL7ZssqOUlQeNJCuvs3Q=",
-        "owner": "nammayatri",
+        "lastModified": 1686216929,
+        "narHash": "sha256-kfAONMom6qJavTV+Cz1JOkWYZDE4mLosdEol9N24Q3Y=",
+        "owner": "arjunkathuria",
         "repo": "common",
-        "rev": "9b0393630068e688795bedd46c49df1a0bbc7c0a",
+        "rev": "943e7aa036592d5374898ee32d7120e94d15bd23",
         "type": "github"
       },
       "original": {
-        "owner": "nammayatri",
+        "owner": "arjunkathuria",
+        "ref": "Mobility-GHC927-Rebased",
         "repo": "common",
         "type": "github"
       }
