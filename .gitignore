@@ -13,4 +13,4 @@ dist-*
 result
 .direnv
 .pre-commit-config.yaml
-
+.cabal-dir
