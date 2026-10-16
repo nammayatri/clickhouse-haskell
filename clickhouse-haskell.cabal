@@ -39,6 +39,7 @@ library
     transformers,
     aeson,
     attoparsec,
+    attoparsec-aeson,
     bytestring,
     binary,
     hashable,

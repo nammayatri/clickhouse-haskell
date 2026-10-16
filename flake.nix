@@ -1,6 +1,6 @@
 {
   inputs = {
-    common.url = "github:nammayatri/common";
+    common.url = "github:nammayatri/common?ref=ghc-98-upgrade";
   };
   outputs = inputs:
     inputs.common.lib.mkFlake { inherit inputs; } {

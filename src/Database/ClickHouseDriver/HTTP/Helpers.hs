@@ -16,6 +16,7 @@ import Control.Monad.Writer (WriterT (runWriterT), tell)
 import qualified Data.Aeson as JP
 import qualified Data.Aeson.Key as AesonKey
 import qualified Data.Aeson.KeyMap as AKM
+import qualified Data.Aeson.Parser as DAP
 import Data.Attoparsec.ByteString (IResult (Done, Fail), parse)
 import Data.Bool (bool)
 import qualified Data.ByteString.Char8 as C8
@@ -32,7 +33,7 @@ import qualified Network.URI.Encode as NE
 -- | Trim JSON data
 extract :: (JP.FromJSON a) => C8.ByteString -> Either String a
 extract val = do
-  either (Left . C8.unpack) eitherFromJSON $ getData (parse JP.json val)
+  either (Left . C8.unpack) eitherFromJSON $ getData (parse DAP.json val)
   where
     getData (Fail e _ _) = Left e
     getData (Done _ (JP.Object x)) = Right $ getData' x
